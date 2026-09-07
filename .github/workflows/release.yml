@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - manifest.json
+      - docs/install-guide.html
       - scripts/build_modpack.py
       - .github/workflows/release.yml
   workflow_dispatch:
@@ -33,6 +34,35 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/build_modpack.py
 
+      - name: Package installation guide and finalize Discord payload
+        id: distribution
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import zipfile
+          from pathlib import Path
+
+          guide_path = Path("docs/install-guide.html")
+          zip_path = Path("build/test-server-modpack.zip")
+          payload_path = Path("build/discord-payload.json")
+
+          with zipfile.ZipFile(zip_path, "a", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              archive.write(guide_path, "설치 가이드.html")
+
+          payload = json.loads(payload_path.read_text(encoding="utf-8"))
+          embed = payload["embeds"][0]
+          embed["title"] = embed["title"].split(" · Build ", 1)[0]
+          fields = {field["name"]: field for field in embed["fields"]}
+          fields["설치"]["value"] = "압축 파일에 있는 설치 가이드를 참고해주세요"
+          should_notify = fields["변경 사항"]["value"] != "모드 구성 변경 없음"
+          payload_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"notify={'true' if should_notify else 'false'}\n")
+          PY
+
       - name: Read pack version
         id: pack
         shell: bash
@@ -59,6 +89,7 @@ jobs:
           fi
 
       - name: Notify Discord
+        if: steps.distribution.outputs.notify == 'true'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         shell: bash
