@@ -1,0 +1,71 @@
+{
+  "pack": {
+    "name": "Test Server Modpack",
+    "version": "1.0.0",
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.97"
+  },
+  "mods": [
+    {
+      "name": "Compass Bar",
+      "source": "github_release",
+      "repository": "najaewon-modding/compass-bar",
+      "artifact": "njw_compass_bar",
+      "version": "1.0.3-mc26.1.2"
+    },
+    {
+      "name": "Just Chat",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-chat",
+      "artifact": "njw_just_chat",
+      "version": "1.1.1-mc26.1.2"
+    },
+    {
+      "name": "Just Dragon Eggs",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-dragon-eggs",
+      "artifact": "njw_just_dragon_eggs",
+      "version": "1.0.0-mc26.1.2"
+    },
+    {
+      "name": "Just End Portal",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-end-portal",
+      "artifact": "njw_just_end_portal",
+      "version": "1.1.0+mc26.1.2"
+    },
+    {
+      "name": "Just Skills",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-skills",
+      "artifact": "njw_just_skills",
+      "version": "1.0.3-mc26.1.2"
+    },
+    {
+      "name": "Just Tractor",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-tractor",
+      "artifact": "njw_just_tractor",
+      "version": "1.1.0-mc26.1.2"
+    },
+    {
+      "name": "Librarian Negotiations",
+      "source": "github_release",
+      "repository": "najaewon-modding/librarian-negotiations",
+      "artifact": "njw_librarian_negotiations",
+      "version": "1.0.3-mc26.1.2"
+    },
+    {
+      "name": "Simple Voice Chat",
+      "source": "modrinth",
+      "project_id": "9eGKb6K1",
+      "version_id": "rVZ2FMgU",
+      "asset": "voicechat-neoforge-2.6.22+26.1.2.jar",
+      "version": "2.6.22+26.1.2",
+      "sha256": "429ca0787c995e17a77586a3714ff25c61ea4ea148e41c155dd9c78c6eddc9ea",
+      "author": "Max Henkel",
+      "homepage": "https://modrepo.de/minecraft/voicechat/overview",
+      "third_party": true
+    }
+  ]
+}
