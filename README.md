@@ -12,9 +12,7 @@ The bundle is generated automatically from `manifest.json`. To update a mod, cha
 
 1. Download `test-server-modpack.zip` from the latest release.
 2. Extract the ZIP.
-3. Copy every JAR from `required/` into the Minecraft instance's `mods` directory.
-4. Optionally copy any JARs you want from `recommended/` into the same `mods` directory.
-5. Remove old versions of bundled mods if they are still present in the instance.
+3. Open `설치 가이드.html` and follow the installation instructions.
 
 `required/` contains the mods expected for the test server. `recommended/` contains optional client-side quality-of-life mods that are useful with the server but are not required to join.
 
@@ -63,10 +61,10 @@ The current `required` and `recommended` lists are also included in every releas
 
 After a GitHub Release is published, the workflow can automatically post a Korean update notice to a Discord channel. The notice contains:
 
-- the modpack version and build number
+- the modpack version
 - added, updated, removed, and recategorized mods
 - a link to the latest ZIP
-- a short installation reminder
+- a reminder to read the installation guide in the ZIP
 
 To enable Discord announcements:
 
@@ -81,6 +79,7 @@ If `DISCORD_WEBHOOK_URL` is not configured, releases still work normally and the
 
 The current versions and categories are defined exclusively by `manifest.json`. Each generated ZIP contains:
 
+- `설치 가이드.html` — NeoForge and test-server modpack installation guide
 - `required/` — mods required for the test server
 - `recommended/` — optional recommended client-side mods
 - `MODS.txt` — resolved mod list grouped by category
