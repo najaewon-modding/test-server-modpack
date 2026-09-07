@@ -1,0 +1,67 @@
+name: Send Discord Demo Notices
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/send-discord-demo.yml
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send test server information
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL is not configured."
+            exit 1
+          fi
+          cat > server-info.json <<'JSON'
+          {
+            "username": "Test Server",
+            "allowed_mentions": {"parse": []},
+            "embeds": [{
+              "title": "테스트 서버 정보",
+              "description": "현재 테스트 서버 접속 정보입니다.",
+              "fields": [
+                {"name": "IP", "value": "`34.64.204.165`", "inline": false},
+                {"name": "Seed", "value": "`2757902968336408806`", "inline": false},
+                {"name": "Minecraft", "value": "`26.1.2`", "inline": false}
+              ]
+            }]
+          }
+          JSON
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            --data-binary @server-info.json \
+            "$DISCORD_WEBHOOK_URL"
+
+      - name: Send modpack preset notice
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          cat > modpack-notice.json <<'JSON'
+          {
+            "username": "Test Server Modpack",
+            "allowed_mentions": {"parse": []},
+            "embeds": [{
+              "title": "테스트 서버 모드팩 1.0.0",
+              "url": "https://github.com/najaewon-modding/test-server-modpack/releases/latest",
+              "description": "새 모드팩이 배포되었습니다.",
+              "fields": [
+                {"name": "변경 사항", "value": "모드 구성 변경 없음", "inline": false},
+                {"name": "다운로드", "value": "[최신 모드팩 ZIP 다운로드](https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip)", "inline": false},
+                {"name": "설치", "value": "압축 파일에 있는 설치 가이드를 참고해주세요", "inline": false}
+              ],
+              "footer": {"text": "Minecraft 26.1.2 · NeoForge 26.1.2.97"}
+            }]
+          }
+          JSON
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            --data-binary @modpack-notice.json \
+            "$DISCORD_WEBHOOK_URL"
