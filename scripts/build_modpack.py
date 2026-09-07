@@ -15,9 +15,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "manifest.json"
 BUILD_DIR = ROOT / "build"
 PACKAGE_DIR = BUILD_DIR / "package"
-MODS_DIR = PACKAGE_DIR / "mods"
 ZIP_PATH = BUILD_DIR / "test-server-modpack.zip"
 USER_AGENT = "najaewon-modding/test-server-modpack"
+CATEGORIES = ("required", "recommended")
 
 
 def request_json(url, github=False):
@@ -88,6 +88,13 @@ def required(mapping, key):
     return value
 
 
+def mod_category(mod):
+    category = mod.get("category", "required")
+    if category not in CATEGORIES:
+        raise RuntimeError(f"{mod.get('name', '<unnamed>')}: category must be one of {', '.join(CATEGORIES)}, got {category!r}")
+    return category
+
+
 def validate_manifest(manifest):
     if not isinstance(manifest, dict) or not isinstance(manifest.get("pack"), dict) or not isinstance(manifest.get("mods"), list):
         raise RuntimeError("manifest.json must contain a 'pack' object and a 'mods' array")
@@ -99,6 +106,8 @@ def validate_manifest(manifest):
     names = [required(mod, "name") for mod in enabled]
     if len(names) != len(set(names)):
         raise RuntimeError("Enabled mod names must be unique")
+    for mod in enabled:
+        mod_category(mod)
 
 
 def write_metadata(manifest, resolved):
@@ -107,18 +116,24 @@ def write_metadata(manifest, resolved):
         f"{pack['name']} {pack['version']}",
         f"Minecraft {pack['minecraft']}",
         f"NeoForge {pack['neoforge']}",
-        "",
-        "Bundled mods:",
     ]
-    for item in resolved:
-        mods_lines.append(f"- {item['name']} {item['version']} ({item['filename']})")
+    for category in CATEGORIES:
+        title = "Required mods" if category == "required" else "Recommended mods"
+        mods_lines.extend(["", f"{title}:"])
+        items = [item for item in resolved if item["category"] == category]
+        if items:
+            for item in items:
+                mods_lines.append(f"- {item['name']} {item['version']} ({item['filename']})")
+        else:
+            mods_lines.append("- None")
     (PACKAGE_DIR / "MODS.txt").write_text("\n".join(mods_lines) + "\n", encoding="utf-8")
 
-    checksum_lines = [f"{item['sha256']}  mods/{item['filename']}" for item in resolved]
+    checksum_lines = [f"{item['sha256']}  {item['category']}/{item['filename']}" for item in resolved]
     (PACKAGE_DIR / "SHA256SUMS.txt").write_text("\n".join(checksum_lines) + "\n", encoding="utf-8")
 
+    enabled_mods = [mod for mod in manifest["mods"] if mod.get("enabled", True)]
     notices = []
-    for mod, item in zip([m for m in manifest["mods"] if m.get("enabled", True)], resolved):
+    for mod, item in zip(enabled_mods, resolved):
         if mod.get("third_party"):
             notices.extend([
                 f"{item['name']} {item['version']}",
@@ -136,23 +151,33 @@ def write_metadata(manifest, resolved):
         f"# {pack['name']} {pack['version']}",
         "",
         f"Automated test-server bundle for Minecraft **{pack['minecraft']}** and NeoForge **{pack['neoforge']}**.",
-        "",
-        "## Included mods",
-        "",
     ]
-    notes.extend(f"- **{item['name']}** {item['version']}" for item in resolved)
+    for category in CATEGORIES:
+        title = "Required Mods" if category == "required" else "Recommended Mods"
+        notes.extend(["", f"## {title}", ""])
+        if category == "required":
+            notes.append("Install all of these mods before joining the test server.")
+        else:
+            notes.append("These mods are optional client-side additions recommended for the test server.")
+        notes.append("")
+        items = [item for item in resolved if item["category"] == category]
+        if items:
+            notes.extend(f"- **{item['name']}** {item['version']}" for item in items)
+        else:
+            notes.append("- None")
     notes.extend([
         "",
         "## Installation",
         "",
         "1. Download `test-server-modpack.zip` from the Assets section.",
-        "2. Extract it into your Minecraft instance directory.",
-        "3. Merge the included `mods` directory with your existing `mods` directory.",
-        "4. Remove older versions of the bundled mods if they are still present.",
+        "2. Extract the ZIP.",
+        "3. Copy every JAR from `required/` into your Minecraft instance's `mods` directory.",
+        "4. Optionally copy the JARs you want from `recommended/` into the same `mods` directory.",
+        "5. Remove older versions of bundled mods if they are still present.",
         "",
         "The ZIP includes the exact manifest and SHA-256 checksums used for this build.",
     ])
-    third_party = [m for m in manifest["mods"] if m.get("enabled", True) and m.get("third_party")]
+    third_party = [mod for mod in enabled_mods if mod.get("third_party")]
     if third_party:
         notes.extend(["", "## Third-party credits", ""])
         for mod in third_party:
@@ -174,13 +199,15 @@ def main():
     validate_manifest(manifest)
     if BUILD_DIR.exists():
         shutil.rmtree(BUILD_DIR)
-    MODS_DIR.mkdir(parents=True)
+    for category in CATEGORIES:
+        (PACKAGE_DIR / category).mkdir(parents=True, exist_ok=True)
 
     resolved = []
     seen_files = set()
     for mod in manifest["mods"]:
         if not mod.get("enabled", True):
             continue
+        category = mod_category(mod)
         source = required(mod, "source")
         if source == "github_release":
             filename, url = github_release(mod)
@@ -193,20 +220,20 @@ def main():
         if filename in seen_files:
             raise RuntimeError(f"Duplicate output filename: {filename}")
         seen_files.add(filename)
-        destination = MODS_DIR / filename
-        print(f"Downloading {mod['name']} {mod['version']} -> {filename}")
+        destination = PACKAGE_DIR / category / filename
+        print(f"Downloading {mod['name']} {mod['version']} -> {category}/{filename}")
         download(url, destination)
         actual_hash = sha256(destination)
         expected_hash = mod.get("sha256")
         if expected_hash and actual_hash.lower() != expected_hash.lower():
             raise RuntimeError(f"{mod['name']}: SHA-256 mismatch for {filename}: expected {expected_hash}, got {actual_hash}")
-        resolved.append({"name": mod["name"], "version": required(mod, "version"), "filename": filename, "sha256": actual_hash})
+        resolved.append({"name": mod["name"], "category": category, "version": required(mod, "version"), "filename": filename, "sha256": actual_hash})
 
     write_metadata(manifest, resolved)
     create_zip()
     print(f"Built {ZIP_PATH.relative_to(ROOT)} with {len(resolved)} mods")
     for item in resolved:
-        print(f"  {item['sha256']}  {item['filename']}")
+        print(f"  {item['sha256']}  {item['category']}/{item['filename']}")
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@
   "mods": [
     {
       "name": "Compass Bar",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/compass-bar",
       "artifact": "njw_compass_bar",
@@ -15,6 +16,7 @@
     },
     {
       "name": "Just Chat",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/just-chat",
       "artifact": "njw_just_chat",
@@ -22,6 +24,7 @@
     },
     {
       "name": "Just Dragon Eggs",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/just-dragon-eggs",
       "artifact": "njw_just_dragon_eggs",
@@ -29,6 +32,7 @@
     },
     {
       "name": "Just End Portal",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/just-end-portal",
       "artifact": "njw_just_end_portal",
@@ -36,6 +40,7 @@
     },
     {
       "name": "Just Skills",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/just-skills",
       "artifact": "njw_just_skills",
@@ -43,6 +48,7 @@
     },
     {
       "name": "Just Tractor",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/just-tractor",
       "artifact": "njw_just_tractor",
@@ -50,6 +56,7 @@
     },
     {
       "name": "Librarian Negotiations",
+      "category": "required",
       "source": "github_release",
       "repository": "najaewon-modding/librarian-negotiations",
       "artifact": "njw_librarian_negotiations",
@@ -57,6 +64,7 @@
     },
     {
       "name": "Simple Voice Chat",
+      "category": "required",
       "source": "modrinth",
       "project_id": "9eGKb6K1",
       "version_id": "rVZ2FMgU",
@@ -66,6 +74,22 @@
       "author": "Max Henkel",
       "homepage": "https://modrepo.de/minecraft/voicechat/overview",
       "third_party": true
+    },
+    {
+      "name": "Clean Shot",
+      "category": "recommended",
+      "source": "github_release",
+      "repository": "najaewon-modding/clean-shot",
+      "artifact": "njw_clean_shot",
+      "version": "1.0.0"
+    },
+    {
+      "name": "Just Volume Controller",
+      "category": "recommended",
+      "source": "github_release",
+      "repository": "najaewon-modding/just-volume-controller",
+      "artifact": "njw_just_volume_controller",
+      "version": "1.1.0+mc26.1.2"
     }
   ]
 }

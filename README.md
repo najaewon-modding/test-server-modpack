@@ -11,9 +11,12 @@ The bundle is generated automatically from `manifest.json`. To update a mod, cha
 ## Installation
 
 1. Download `test-server-modpack.zip` from the latest release.
-2. Extract it into the Minecraft instance directory.
-3. Allow the included `mods` directory to merge with the existing `mods` directory.
-4. Remove old versions of bundled mods if they are still present in the instance.
+2. Extract the ZIP.
+3. Copy every JAR from `required/` into the Minecraft instance's `mods` directory.
+4. Optionally copy any JARs you want from `recommended/` into the same `mods` directory.
+5. Remove old versions of bundled mods if they are still present in the instance.
+
+`required/` contains the mods expected for the test server. `recommended/` contains optional client-side quality-of-life mods that are useful with the server but are not required to join.
 
 ## Updating the bundle
 
@@ -22,11 +25,17 @@ For mods released from repositories under `najaewon-modding`, only the `version`
 - tag: `v<version>`
 - asset: `<artifact>-<version>.jar`
 
+Each mod also has a `category`:
+
+- `required` — included in the ZIP under `required/`
+- `recommended` — included in the ZIP under `recommended/`
+
 Example:
 
 ```json
 {
   "name": "Compass Bar",
+  "category": "required",
   "source": "github_release",
   "repository": "najaewon-modding/compass-bar",
   "artifact": "njw_compass_bar",
@@ -38,13 +47,30 @@ A mod can be temporarily excluded by setting `"enabled": false`.
 
 ## Bundle contents
 
-The current versions are defined exclusively by `manifest.json`. Each generated ZIP also contains:
+The current versions and categories are defined exclusively by `manifest.json`. Each generated ZIP contains:
 
-- `mods/` — the installable JAR files
-- `MODS.txt` — resolved mod list
+- `required/` — mods required for the test server
+- `recommended/` — optional recommended client-side mods
+- `MODS.txt` — resolved mod list grouped by category
 - `SHA256SUMS.txt` — SHA-256 checksums for every bundled JAR
 - `manifest.json` — the exact manifest used to create that bundle
 - `THIRD_PARTY_NOTICES.txt` — third-party attribution information
+
+### Required
+
+- Compass Bar
+- Just Chat
+- Just Dragon Eggs
+- Just End Portal
+- Just Skills
+- Just Tractor
+- Librarian Negotiations
+- Simple Voice Chat
+
+### Recommended
+
+- Clean Shot
+- Just Volume Controller
 
 ## Third-party software
 
