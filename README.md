@@ -6,7 +6,7 @@ The latest bundle can always be downloaded from:
 
 https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip
 
-The bundle is generated automatically from `manifest.json`. To update a mod, change its `version` in the manifest and push the change to `main`. GitHub Actions resolves the matching release JAR, validates the bundle, creates a ZIP, and publishes a new GitHub Release.
+The bundle is generated automatically from `manifest.json`. To update a mod, change its `version` in the manifest and push the change to `main`. GitHub Actions resolves the matching release JAR, validates the bundle, creates a ZIP, publishes a new GitHub Release, and optionally posts the update to Discord.
 
 ## Installation
 
@@ -44,6 +44,38 @@ Example:
 ```
 
 A mod can be temporarily excluded by setting `"enabled": false`.
+
+## Automatic release notes
+
+Before publishing a new release, the builder reads the `manifest.json` stored in the latest published modpack release and compares it with the current manifest.
+
+The release notes automatically list:
+
+- added mods
+- updated mod versions
+- removed mods
+- `required` / `recommended` category changes
+- modpack version changes
+
+The current `required` and `recommended` lists are also included in every release note.
+
+## Discord announcements
+
+After a GitHub Release is published, the workflow can automatically post a Korean update notice to a Discord channel. The notice contains:
+
+- the modpack version and build number
+- added, updated, removed, and recategorized mods
+- a link to the latest ZIP
+- a short installation reminder
+
+To enable Discord announcements:
+
+1. Create a webhook for the Discord channel that should receive modpack updates.
+2. In this repository, open **Settings → Secrets and variables → Actions**.
+3. Create a new repository secret named `DISCORD_WEBHOOK_URL`.
+4. Paste the Discord webhook URL as the secret value.
+
+If `DISCORD_WEBHOOK_URL` is not configured, releases still work normally and the Discord step is skipped.
 
 ## Bundle contents
 

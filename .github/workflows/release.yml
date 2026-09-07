@@ -57,3 +57,17 @@ jobs:
               --title "$TITLE" \
               --notes-file build/release-notes.md
           fi
+
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL is not configured; skipping Discord notification."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            --data-binary @build/discord-payload.json \
+            "$DISCORD_WEBHOOK_URL"
