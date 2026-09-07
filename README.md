@@ -6,27 +6,96 @@ The latest bundle can always be downloaded from:
 
 https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip
 
-The bundle is generated automatically from `manifest.json`. To update a mod, change its `version` in the manifest and push the change to `main`. GitHub Actions resolves the matching release JAR, validates the bundle, creates a ZIP, publishes a new GitHub Release, and optionally posts the update to Discord.
+## What to edit
 
-## Installation
+Normal operation only requires changes to `manifest.json`.
 
-1. Download `test-server-modpack.zip` from the latest release.
-2. Extract the ZIP.
-3. Open `설치 가이드.html` and follow the installation instructions.
+For a normal modpack update:
 
-`required/` contains the mods expected for the test server. `recommended/` contains optional client-side quality-of-life mods that are useful with the server but are not required to join.
+1. Add, remove, enable, disable, or recategorize a mod, or change a mod's `version` / pinned download target.
+2. Push the manifest change to `main`.
+3. Do not change `pack.version` unless you intentionally want to jump to a higher version such as `1.1.0` or `2.0.0`.
 
-## Updating the bundle
+Everything after that is automated.
 
-For mods released from repositories under `najaewon-modding`, only the `version` normally needs to be changed. The builder derives:
+## Automatic versioning
+
+The workflow compares the current distributable configuration with the latest published modpack release.
+
+A distributable configuration change includes:
+
+- Minecraft version changes
+- NeoForge version changes
+- adding or removing an enabled mod
+- enabling or disabling a mod
+- `required` / `recommended` category changes
+- mod version changes
+- changes to the source information that determines the downloaded JAR, such as repository/tag/asset or Modrinth version ID
+- pinned SHA-256 changes
+
+If the distributable configuration changed and `pack.version` was not manually set to a higher version, the latest released version is automatically patch-bumped:
+
+```text
+1.0.0 -> 1.0.1 -> 1.0.2
+```
+
+If you intentionally set `pack.version` to a version higher than the latest release in the same manifest update, that version is used instead:
+
+```text
+latest release: 1.0.7
+manifest pack.version: 1.1.0
+result: 1.1.0
+```
+
+An explicit `pack.version` increase without a distributable configuration change is rejected. This keeps these three events synchronized:
+
+```text
+distributed modpack configuration changes
+<=> modpack version changes
+<=> Discord announcement is sent
+```
+
+Automatic patch bumps are derived from the latest release and do not rewrite `manifest.json` on `main`. Therefore the `pack.version` stored in the repository may be lower than the latest automatically generated patch version. That is expected; only edit it when you want to force a higher version such as `1.1.0` or `2.0.0`.
+
+## Automated validation and release
+
+For every workflow run, the builder:
+
+- validates the manifest structure and semantic version format
+- resolves every enabled mod from its pinned GitHub Release or Modrinth version
+- requires exactly one matching JAR
+- validates pinned SHA-256 values when provided
+- prevents duplicate output filenames
+- generates the exact bundled `manifest.json`
+- generates `MODS.txt`, `SHA256SUMS.txt`, and `THIRD_PARTY_NOTICES.txt`
+- includes `설치 가이드.html`
+- creates `test-server-modpack.zip`
+- generates release notes and the Discord payload
+- publishes or updates a GitHub Release
+
+Changes to the installation guide, build script, or workflow can still create a new internal build/release, but they do not change the modpack version and do not send a Discord announcement unless the distributable modpack configuration also changed.
+
+## Discord announcements
+
+Discord announcements are sent only when the distributable modpack configuration changed, which is also exactly when the modpack version changes.
+
+The announcement contains:
+
+- the new modpack version
+- automatically generated change details
+- the latest ZIP download link
+- `압축 파일에 있는 설치 가이드를 참고해주세요`
+
+The public Discord title does not include the internal GitHub Actions build number.
+
+The webhook URL must be stored as the repository Actions secret `DISCORD_WEBHOOK_URL`. If the secret is missing, the release still succeeds and only the Discord step is skipped.
+
+## Manifest conventions
+
+For mods released from repositories under `najaewon-modding`, only the mod's `version` normally needs to be changed. Unless explicitly overridden, the builder derives:
 
 - tag: `v<version>`
 - asset: `<artifact>-<version>.jar`
-
-Each mod also has a `category`:
-
-- `required` — included in the ZIP under `required/`
-- `recommended` — included in the ZIP under `recommended/`
 
 Example:
 
@@ -43,65 +112,19 @@ Example:
 
 A mod can be temporarily excluded by setting `"enabled": false`.
 
-## Automatic release notes
-
-Before publishing a new release, the builder reads the `manifest.json` stored in the latest published modpack release and compares it with the current manifest.
-
-The release notes automatically list:
-
-- added mods
-- updated mod versions
-- removed mods
-- `required` / `recommended` category changes
-- modpack version changes
-
-The current `required` and `recommended` lists are also included in every release note.
-
-## Discord announcements
-
-After a GitHub Release is published, the workflow can automatically post a Korean update notice to a Discord channel. The notice contains:
-
-- the modpack version
-- added, updated, removed, and recategorized mods
-- a link to the latest ZIP
-- a reminder to read the installation guide in the ZIP
-
-To enable Discord announcements:
-
-1. Create a webhook for the Discord channel that should receive modpack updates.
-2. In this repository, open **Settings → Secrets and variables → Actions**.
-3. Create a new repository secret named `DISCORD_WEBHOOK_URL`.
-4. Paste the Discord webhook URL as the secret value.
-
-If `DISCORD_WEBHOOK_URL` is not configured, releases still work normally and the Discord step is skipped.
+Third-party mods can use exact external pins such as a Modrinth `version_id`, asset filename, and SHA-256.
 
 ## Bundle contents
 
-The current versions and categories are defined exclusively by `manifest.json`. Each generated ZIP contains:
+Each generated ZIP contains:
 
-- `설치 가이드.html` — NeoForge and test-server modpack installation guide
 - `required/` — mods required for the test server
 - `recommended/` — optional recommended client-side mods
+- `설치 가이드.html` — Korean NeoForge and test-server installation guide
 - `MODS.txt` — resolved mod list grouped by category
 - `SHA256SUMS.txt` — SHA-256 checksums for every bundled JAR
-- `manifest.json` — the exact manifest used to create that bundle
+- `manifest.json` — exact manifest for that release, including the effective automatically calculated modpack version
 - `THIRD_PARTY_NOTICES.txt` — third-party attribution information
-
-### Required
-
-- Compass Bar
-- Just Chat
-- Just Dragon Eggs
-- Just End Portal
-- Just Skills
-- Just Tractor
-- Librarian Negotiations
-- Simple Voice Chat
-
-### Recommended
-
-- Clean Shot
-- Just Volume Controller
 
 ## Third-party software
 
