@@ -5,143 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NeoForge 및 테스트 서버 모드팩 설치 가이드</title>
 <style>
-  :root {
-    --fg: #171717;
-    --muted: #666;
-    --border: #d9d9d9;
-    --soft: #f6f7f8;
-    --info: #eef6ff;
-    --warn: #fff7e6;
-    --danger: #fff0f0;
-    --accent: #2f5fa7;
-  }
-  * { box-sizing: border-box; }
-  html { font-size: 15px; }
-  body {
-    margin: 0;
-    color: var(--fg);
-    background: #fff;
-    font-family: "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
-    line-height: 1.65;
-  }
-  main {
-    max-width: 920px;
-    margin: 0 auto;
-    padding: 42px 42px 70px;
-  }
-  h1, h2, h3 { line-height: 1.3; margin-top: 0; }
-  h1 { font-size: 2rem; margin-bottom: 8px; }
-  h2 {
-    font-size: 1.35rem;
-    margin-top: 38px;
-    padding-bottom: 7px;
-    border-bottom: 2px solid var(--fg);
-  }
-  h3 { font-size: 1.05rem; margin-top: 24px; margin-bottom: 8px; }
-  p { margin: 8px 0 12px; }
-  ul, ol { margin: 8px 0 14px; padding-left: 1.4rem; }
-  li { margin: 4px 0; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  code {
-    font-family: "Cascadia Mono", "Consolas", monospace;
-    background: #f2f2f2;
-    padding: 0.1em 0.35em;
-    border-radius: 4px;
-    font-size: 0.92em;
-  }
-  pre {
-    background: #f3f4f6;
-    border: 1px solid #e2e4e8;
-    border-radius: 8px;
-    padding: 12px 14px;
-    overflow-x: auto;
-    line-height: 1.45;
-  }
-  pre code { background: transparent; padding: 0; }
-  .subtitle {
-    color: var(--muted);
-    font-size: 1.02rem;
-    margin-bottom: 22px;
-  }
-  .meta {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 6px 16px;
-    padding: 16px 18px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--soft);
-    margin: 20px 0 28px;
-  }
-  .meta strong { font-weight: 650; }
-  .box {
-    border: 1px solid var(--border);
-    border-left: 5px solid #8c8c8c;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin: 14px 0;
-    background: #fff;
-  }
-  .box.info { background: var(--info); border-left-color: #4a89dc; }
-  .box.warn { background: var(--warn); border-left-color: #d18b00; }
-  .box.danger { background: var(--danger); border-left-color: #d14b4b; }
-  .label {
-    font-weight: 700;
-    display: inline-block;
-    margin-bottom: 4px;
-  }
-  .quick {
-    border: 2px solid var(--fg);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin: 24px 0;
-  }
-  .quick h2 {
-    border: 0;
-    margin: 0 0 10px;
-    padding: 0;
-    font-size: 1.25rem;
-  }
-  .folder {
-    font-family: "Cascadia Mono", "Consolas", monospace;
-    background: #f7f7f7;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    padding: 14px 16px;
-    white-space: pre-wrap;
-  }
-  .small { color: var(--muted); font-size: 0.92rem; }
-  .checklist li { margin: 7px 0; }
-  .page-break { break-before: page; page-break-before: always; }
-  .avoid-break { break-inside: avoid; page-break-inside: avoid; }
-  footer {
-    margin-top: 44px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 0.88rem;
-  }
-  @page {
-    size: A4;
-    margin: 14mm 15mm 16mm;
-  }
-  @media print {
-    html { font-size: 11pt; }
-    body { color: #000; }
-    main { max-width: none; padding: 0; }
-    a { color: #000; text-decoration: none; }
-    h2 { break-after: avoid; page-break-after: avoid; }
-    h3 { break-after: avoid; page-break-after: avoid; }
-    pre, .box, .meta, .quick, .folder { break-inside: avoid; page-break-inside: avoid; }
-  }
+@font-face{font-family:'NanumSquare';src:local('NanumSquare')}
+:root{--bg:#f5f7fb;--paper:#fff;--text:#1f2937;--muted:#64748b;--line:#e2e8f0;--accent:#2563eb;--accent-soft:#eff6ff;--code:#f1f5f9;--dark:#0f172a;--warn-bg:#fff7e6;--warn-line:#d18b00;--danger-bg:#fff0f0;--danger-line:#d14b4b}
+*{box-sizing:border-box}
+html{background:var(--bg);font-size:15px}
+body{margin:0;color:var(--text);font-family:'NanumSquare','Noto Sans CJK KR','Malgun Gothic',sans-serif;line-height:1.72;letter-spacing:-.01em}
+.page{max-width:920px;margin:44px auto;padding:54px 64px;background:var(--paper);box-shadow:0 14px 42px rgba(15,23,42,.08);border-radius:18px}
+h1,h2,h3{line-height:1.3}
+h1{margin:0 0 48px;font-size:31px;letter-spacing:-.035em}
+.subtitle{margin:0 0 36px;color:var(--muted);font-size:14px}
+h2{margin:38px 0 16px;padding-bottom:9px;border-bottom:2px solid var(--line);font-size:22px;letter-spacing:-.025em}
+h3{margin:28px 0 11px;font-size:17px}
+p{margin:9px 0}
+ul,ol{margin:9px 0 0;padding-left:24px}
+li{margin:7px 0}
+li::marker{font-weight:700;color:#475569}
+a{color:var(--accent);font-weight:700;text-decoration:none}
+a:hover{text-decoration:underline}
+code{padding:2px 7px;background:var(--code);border:1px solid var(--line);border-radius:6px;font-family:'Noto Sans Mono CJK KR',Consolas,monospace;font-size:.92em;letter-spacing:0}
+pre{margin:10px 0;padding:13px 15px;background:var(--code);border:1px solid var(--line);border-radius:9px;overflow-x:auto;line-height:1.5}
+pre code{padding:0;background:transparent;border:0;border-radius:0}
+.meta{display:grid;grid-template-columns:140px 1fr;gap:6px 16px;margin:36px 0;padding:15px 17px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.meta strong{font-weight:800}
+.box{margin:16px 0;padding:12px 15px;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:6px;color:#334155;font-size:14px}
+.box + .box{margin-top:7px}
+.box.info{background:var(--accent-soft);border-left-color:var(--accent)}
+.box.warn{background:var(--warn-bg);border-left-color:var(--warn-line)}
+.box.danger{background:var(--danger-bg);border-left-color:var(--danger-line)}
+.label{display:inline-block;margin-bottom:4px;font-weight:800}
+.quick{margin:24px 0;padding:25px 24px 18px 24px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.quick h2{margin:0 0 12px;padding:0;border:0;font-size:20px}
+.folder{margin:10px 0;padding:14px 16px;background:var(--code);border:1px solid var(--line);border-radius:9px;font-family:'Noto Sans Mono CJK KR',Consolas,monospace;white-space:pre-wrap;line-height:1.5}
+.small{color:var(--muted);font-size:.92rem}
+.checklist li{margin:7px 0}
+.page-break{break-before:page;page-break-before:always}
+.avoid-break{break-inside:avoid;page-break-inside:avoid}
+footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#94a3b8;font-size:12px;}
+@media(max-width:700px){.page{margin:0;padding:34px 22px;border-radius:0;box-shadow:none}.meta{grid-template-columns:110px 1fr}}
+@media print{
+  html,body{background:#fff}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{max-width:none;margin:0;padding:12mm 13mm;box-shadow:none;border-radius:0}
+  h1{font-size:26px}.subtitle{margin-bottom:24px}h2{margin-top:26px}
+  a{color:var(--accent);text-decoration:none}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  pre,.box,.meta,.quick,.folder{break-inside:avoid;page-break-inside:avoid}
+  @page{size:A4;margin:10mm}
+}
 </style>
 </head>
 <body>
-<main>
+<main class="page">
   <header>
     <h1>NeoForge 및 테스트 서버 모드팩 설치 가이드</h1>
-    <div class="subtitle">Minecraft 26.1.2 · NeoForge 26.1.2.97 기준</div>
 
     <div class="meta avoid-break">
       <strong>Minecraft</strong><span>26.1.2</span>
@@ -179,10 +95,6 @@
       <li><code>required</code>의 모든 JAR와 원하는 <code>recommended</code> JAR를 Minecraft의 <code>mods</code> 폴더로 복사</li>
       <li>NeoForge 프로필로 Minecraft 실행 후 서버 접속</li>
     </ol>
-    <div class="box warn">
-      <span class="label">주의</span><br>
-      같은 모드의 이전 버전 JAR가 남아 있다면 삭제하세요.
-    </div>
   </section>
 
   <h2>1. Java 25 설치</h2>
@@ -199,9 +111,8 @@
   <div class="box info">
     <span class="label">Java 명령어를 확인할 수 없는 경우</span><br>
     <code>java</code> 명령어를 찾을 수 없거나 인식할 수 없다는 메시지가 표시되면
-    아래 링크에서 Java 25 배포판을 설치하세요.<br>
-    <a href="https://adoptium.net/temurin/releases/?version=25">Eclipse Temurin 25 다운로드</a><br>
-    설치 후 다시 <code>java -version</code>을 실행하여 확인합니다.
+    <a href="https://adoptium.net/temurin/releases/?version=25">여기</a>에서 Java 25 배포판을 설치하세요.
+    설치 후 다시 <code>java -version</code>을 실행하여 잘 설치가 되었는지 확인합니다.
   </div>
 
   <h2>2. NeoForge 다운로드</h2>
@@ -248,7 +159,7 @@
   <pre><code>C:\Users\&lt;사용자 이름&gt;\AppData\Roaming\.minecraft\mods</code></pre>
 
   <div class="box info">
-    <span class="label">가장 빠르게 여는 방법</span><br>
+    <span class="label">빠르게 여는 방법</span><br>
     파일 탐색기 주소창 또는 <strong>Win + R</strong>에 아래 내용을 입력하세요.
     <pre><code>%APPDATA%\.minecraft\mods</code></pre>
   </div>
@@ -256,11 +167,7 @@
   <div class="page-break"></div>
 
   <h2>6. 테스트 서버 모드팩 다운로드</h2>
-  <p>최신 테스트 서버 모드팩은 아래 주소에서 다운로드할 수 있습니다.</p>
-
-  <p><a href="https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip">
-    https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip
-  </a></p>
+  <p>최신 테스트 서버 모드팩은 <a href="https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip">여기</a>를 눌러 다운로드할 수 있습니다.</p>
 
   <p>다운로드한 <code>test-server-modpack.zip</code>의 압축을 풀면 다음 두 폴더가 있습니다.</p>
 
@@ -343,6 +250,11 @@
     <li>추가한 테스트 서버를 선택하여 접속합니다.</li>
   </ol>
 
+  <div class="box info">
+    <span class="label">서버 주소</span><br>
+    테스트 서버 주소는 관리자에게 문의 바랍니다.
+  </div>
+
   <h2>11. 자주 발생하는 문제</h2>
 
   <h3>NeoForge installer가 실행되지 않음</h3>
@@ -376,8 +288,8 @@
   <p>아닙니다. <code>recommended</code>는 선택 사항입니다. 서버 접속에는 <code>required</code>만 필요합니다.</p>
 
   <footer>
-    이 문서는 <a href="https://github.com/najaewon-modding">najaewon-modding</a> 테스트 서버용 설치 가이드입니다.<br>
-    테스트 서버 디스코드: <a href="https://discord.gg/zzFXWvU3C">https://discord.gg/zzFXWvU3C</a>
+    이 문서는 <a href="https://github.com/najaewon-modding">테스트 서버</a>용 설치 가이드입니다.<br>
+    테스트 서버 디스코드<a href="https://discord.gg/zzFXWvU3C">링크</a>
   </footer>
 </main>
 </body>
