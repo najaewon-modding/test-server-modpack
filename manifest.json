@@ -7,6 +7,14 @@
   },
   "mods": [
     {
+      "name": "After the End",
+      "category": "required",
+      "source": "github_release",
+      "repository": "najaewon-modding/after-the-end",
+      "artifact": "njw_after_the_end",
+      "version": "1.0.0-beta.1-mc26.1.2"
+    },
+    {
       "name": "Compass Bar",
       "category": "required",
       "source": "github_release",
@@ -28,7 +36,7 @@
       "source": "github_release",
       "repository": "najaewon-modding/just-dragon-eggs",
       "artifact": "njw_just_dragon_eggs",
-      "version": "1.0.0-mc26.1.2"
+      "version": "1.0.1-mc26.1.2"
     },
     {
       "name": "Just End Portal",
