@@ -1,5 +1,6 @@
 name: Build and Release Modpack
 
+# A workflow-only commit can be used to rebuild when an upstream mod replaces an asset without changing its version.
 on:
   push:
     branches: [main]
