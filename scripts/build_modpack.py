@@ -22,7 +22,7 @@ PACKAGE_DIR = BUILD_DIR / "package"
 ZIP_PATH = BUILD_DIR / "test-server-modpack.zip"
 RELEASE_INFO_PATH = BUILD_DIR / "release-info.json"
 USER_AGENT = "najaewon-modding/test-server-modpack"
-CATEGORIES = ("required", "recommended")
+CATEGORIES = ("required", "recommended", "server")
 SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 RELEASE_TAG_RE = re.compile(r"^v(\d+\.\d+\.\d+)(?:-build\.\d+)?$")
 
@@ -356,7 +356,7 @@ def write_metadata(manifest, package_manifest, resolved, previous_tag, changes, 
         f"NeoForge {pack['neoforge']}",
     ]
     for category in CATEGORIES:
-        title = "Required mods" if category == "required" else "Recommended mods"
+        title = {"required": "Required mods", "recommended": "Recommended mods", "server": "Server-only mods"}[category]
         mods_lines.extend(["", f"{title}:"])
         items = [item for item in resolved if item["category"] == category]
         mods_lines.extend((f"- {item['name']} {item['version']} ({item['filename']})" for item in items) if items else ["- None"])
@@ -391,9 +391,14 @@ def write_metadata(manifest, package_manifest, resolved, previous_tag, changes, 
     ]
     notes.extend(release_change_lines(changes, previous_tag))
     for category in CATEGORIES:
-        title = "Required Mods" if category == "required" else "Recommended Mods"
+        title = {"required": "Required Mods", "recommended": "Recommended Mods", "server": "Server-only Mods"}[category]
+        descriptions = {
+            "required": "Install all of these mods before joining the test server.",
+            "recommended": "These mods are optional client-side additions recommended for the test server.",
+            "server": "These mods are installed on the server only and should not be copied to the client mods folder.",
+        }
         notes.extend(["", f"## {title}", ""])
-        notes.append("Install all of these mods before joining the test server." if category == "required" else "These mods are optional client-side additions recommended for the test server.")
+        notes.append(descriptions[category])
         notes.append("")
         items = [item for item in resolved if item["category"] == category]
         notes.extend((f"- **{item['name']}** {item['version']}" for item in items) if items else ["- None"])

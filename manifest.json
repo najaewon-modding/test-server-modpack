@@ -84,6 +84,14 @@
       "third_party": true
     },
     {
+      "name": "Leaf Rush",
+      "category": "server",
+      "source": "github_release",
+      "repository": "najaewon-modding/leaf-rush",
+      "artifact": "njw_leaf_rush",
+      "version": "1.0.2-mc26.1.2"
+    },
+    {
       "name": "Clean Shot",
       "category": "recommended",
       "source": "github_release",
