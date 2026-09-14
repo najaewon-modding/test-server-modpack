@@ -169,13 +169,14 @@ footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#
   <h2>6. 테스트 서버 모드팩 다운로드</h2>
   <p>최신 테스트 서버 모드팩은 <a href="https://github.com/najaewon-modding/test-server-modpack/releases/latest/download/test-server-modpack.zip">여기</a>를 눌러 다운로드할 수 있습니다.</p>
 
-  <p>다운로드한 <code>test-server-modpack.zip</code>의 압축을 풀면 다음 두 폴더가 있습니다.</p>
+  <p>다운로드한 <code>test-server-modpack.zip</code>의 압축을 풀면 다음 세 폴더가 있습니다.</p>
 
   <div class="folder">test-server-modpack/
 ├─ required/
-└─ recommended/</div>
+├─ recommended/
+└─ server/</div>
 
-  <h2>7. Required / Recommended 모드 설치</h2>
+  <h2>7. 클라이언트 모드 설치</h2>
 
   <h3>required</h3>
   <p><strong>테스트 서버 접속에 필요한 모드입니다. 모두 설치하세요.</strong></p>
@@ -188,6 +189,9 @@ footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#
 
   <pre><code>recommended/
 → 원하는 .jar 파일만 mods 폴더로 복사</code></pre>
+
+  <h3>server</h3>
+  <p><strong>서버 전용 모드입니다. 클라이언트의 <code>mods</code> 폴더에는 복사하지 마세요.</strong></p>
 
   <h2>8. 설치 예시</h2>
 
@@ -202,9 +206,11 @@ footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#
 │  ├─ njw_just_tractor-...
 │  ├─ njw_librarian_negotiations-...
 │  └─ voicechat-neoforge-...
-└─ recommended/
-   ├─ njw_clean_shot-...
-   └─ njw_just_volume_controller-...</div>
+├─ recommended/
+│  ├─ njw_clean_shot-...
+│  └─ njw_just_volume_controller-...
+└─ server/
+   └─ njw_leaf_rush-...</div>
 
   <h3>설치 후 mods 폴더 예시</h3>
   <div class="folder">.minecraft/
@@ -218,7 +224,7 @@ footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#
    ├─ njw_librarian_negotiations-...
    └─ voicechat-neoforge-...</div>
 
-  <p class="small">추천 모드를 설치한 경우 해당 JAR들도 같은 <code>mods</code> 폴더 안에 함께 들어갑니다.</p>
+  <p class="small">추천 모드를 설치한 경우 해당 JAR들도 같은 <code>mods</code> 폴더 안에 함께 들어갑니다. <code>server</code> 폴더의 JAR는 클라이언트에 설치하지 않습니다.</p>
 
   <h2>9. 모드팩 업데이트 방법</h2>
 
